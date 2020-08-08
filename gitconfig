@@ -1,0 +1,47 @@
+[alias]
+    br = branch
+    ci = commit
+    co = checkout
+    cp = cherry-pick
+    dc = diff --cached
+    dh = !"git diff-index --quiet HEAD -- || clear; git --no-pager diff --patch-with-stat"
+    fc = "!f() { git log --pretty=format:'%C(yellow)%h  %Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short --grep=$1; }; f"
+    ff = "!f() { git log --pretty=format:'%C(yellow)%h  %Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short $1; }; f"
+    fg = "!f() { git log --pretty=format:'%C(yellow)%h  %Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short -S$1; }; f"
+    lg = log --graph --all --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(bold white)— %an%C(reset)%C(bold yellow)%d%C(reset)' --abbrev-commit --date=relative
+    pl = pull --rebase --autostash
+    st = status
+    sh = show
+[color]
+    ui = auto
+[color "branch"]
+    current = yellow reverse
+    local = yellow
+    remote = green
+[color "status"]
+    added = yellow
+    changed = green
+    untracked = cyan
+[color "diff"]
+    meta = yellow
+    frag = magenta bold
+    commit = yellow bold
+    old = red bold
+    new = green bold
+    whitespace = red reverse
+[color "diff-highlight"]
+    oldNormal = red bold
+    oldHighlight = red bold 52
+    newNormal = green bold
+    newHighlight = green bold 22
+[difftool]
+    prompt = false
+[push]
+    default = current
+[user]
+    name = Thiago Stahlschmidt
+    email = thiago.cpgei@gmail.com
+[merge]
+    tool = fugitive
+[mergetool "fugitive"]
+    cmd = vim -f -c "Gvdiffsplit! $MERGED"
