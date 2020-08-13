@@ -160,7 +160,7 @@ nmap <leader>gh :diffget //2<cr>
 nmap <leader>gj :cnext<cr>
 nmap <leader>gk :cprev<cr>
 nmap <leader>gl :diffget //3<cr>
-nmap <leader>gs :GStatus<cr>
+nmap <leader>gs :Gstatus<cr>
 
 fun! TouchBarMap()
    silent! !fish -ic __fish_apple_touchbar_vim_view
