@@ -1,6 +1,8 @@
 "require: curl, git and npm/node for coc
+set autoindent
 set belloff=all
 set background=dark
+set cindent
 set clipboard=unnamed
 set cmdheight=2
 set colorcolumn=120
@@ -135,6 +137,7 @@ vnoremap J :m '>+1<cr>gv=gv
 vnoremap K :m '<-2<cr>gv=gv
 noremap x "_x
 vnoremap p "_dP
+nnoremap p p=`]
 inoremap <c-c> <esc>
 
 if !exists('*Preserve')
