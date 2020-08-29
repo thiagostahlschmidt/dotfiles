@@ -2,7 +2,6 @@
 set autoindent
 set belloff=all
 set background=dark
-set cindent
 set clipboard=unnamed
 set cmdheight=2
 set colorcolumn=120
@@ -71,6 +70,7 @@ Plug 'mbbill/undotree'
 Plug 'morhetz/gruvbox'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'sheerun/vim-polyglot'
+Plug 'stsewd/fzf-checkout.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'vim-airline/vim-airline'
 call plug#end()
@@ -137,7 +137,6 @@ vnoremap J :m '>+1<cr>gv=gv
 vnoremap K :m '<-2<cr>gv=gv
 noremap x "_x
 vnoremap p "_dP
-nnoremap p p=`]
 inoremap <c-c> <esc>
 
 if !exists('*Preserve')
@@ -157,26 +156,13 @@ command! BufferOnly call Preserve("exec '%bd|e#|bd#'")
 cab bo BufferOnly
 
 nmap <leader>gb :Gedit HEAD<cr>
-nmap <leader>gc :Gclog -- %<cr>
+nmap <leader>gc :GBranches<cr>
+nmap <leader>gl :Gclog -- %<cr>
 nmap <leader>gf :GFiles<cr>
-nmap <leader>gh :diffget //2<cr>
-nmap <leader>gj :cnext<cr>
-nmap <leader>gk :cprev<cr>
-nmap <leader>gl :diffget //3<cr>
+nmap <leader>g<left> :diffget //2<cr>
+nmap <leader>g<right> :diffget //3<cr>
 nmap <leader>gs :Gstatus<cr>
 
-fun! TouchBarMap()
-   silent! !fish -ic __fish_apple_touchbar_vim_view
-   if v:shell_error == 0
-       autocmd VimLeave * silent! !fish -ic $caller_view
-       map <f1> :qa!<cr>
-       map <f2> :Buffers<cr>
-       map <f3> :Files<cr>
-       map <f4> :Rg<cr>
-       map <f5> :Tags<cr>
-       map <f6> :UndotreeToggle<cr>
-   endif
-endfun
 
 let g:coc_start_at_startup = 0
 let g:coc_global_extensions = [
@@ -200,9 +186,9 @@ function! s:coc_start() abort
     if empty(glob('~/.vim/lombok.jar'))
        silent !curl -sfLo ~/.vim/lombok.jar https://projectlombok.org/downloads/lombok.jar
     endif
+    let g:coc_user_config['java.jdt.ls.vmargs'] = "-javaagent:".$HOME."/.vim/lombok.jar -Xbootclasspath/a:".$HOME."/.vim/lombok.jar"
     let g:coc_user_config['coc.preferences.jumpCommand'] = 'drop'
     let g:coc_user_config['diagnostic.checkCurrentLine'] = "true"
-    let g:coc_user_config['java.jdt.ls.vmargs'] = "-javaagent:".$HOME."/.vim/lombok.jar -Xbootclasspath/a:".$HOME."/.vim/lombok.jar"
     let g:coc_user_config['languageserver'] = {
       \  "golang": {
       \    "command": "gopls",
@@ -223,14 +209,29 @@ nmap <leader>cr <Plug>(coc-references)
 nmap <leader>cn <Plug>(coc-rename)
 nmap <leader>c[ <Plug>(coc-diagnostic-prev)
 nmap <leader>c] <Plug>(coc-diagnostic-next)
+nnoremap <leader>cs :CocSearch <c-r>=expand("<cword>")<cr><cr>
+nnoremap <leader>cr :CocRestart<cr>
 
 inoremap <silent><expr> <c-space> coc#refresh()
-nnoremap <silent> K :call <SID>show_documentation()<CR>
+nnoremap <silent>K :call <sid>show_documentation()<cr>
 xmap <leader>f <Plug>(coc-format-selected)
 nmap <leader>f <Plug>(coc-format-selected)
 
 command! -nargs=0 Ff :call CocAction('format')
 command! -nargs=0 Oi :call CocAction('runCommand', 'editor.action.organizeImport')
+
+fun! TouchBarMap()
+   silent! !fish -ic __fish_apple_touchbar_vim_view
+   if v:shell_error == 0
+       autocmd VimLeave * silent! !fish -ic $caller_view
+       map <f1> :qa!<cr>
+       map <f2> :Buffers<cr>
+       map <f3> :Files<cr>
+       map <f4> :Rg<cr>
+       map <f5> :Tags<cr>
+       map <f6> :UndotreeToggle<cr>
+   endif
+endfun
 
 autocmd BufRead,BufNewFile *.tpl setlocal ts=2 sts=2 sw=2 expandtab
 autocmd BufWritePre * call Preserve(":%s/\\s\\+$//e")
