@@ -216,6 +216,7 @@ inoremap <silent><expr> <c-space> coc#refresh()
 nnoremap <silent>K :call <sid>show_documentation()<cr>
 xmap <leader>f <Plug>(coc-format-selected)
 nmap <leader>f <Plug>(coc-format-selected)
+cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
 
 command! -nargs=0 Ff :call CocAction('format')
 command! -nargs=0 Oi :call CocAction('runCommand', 'editor.action.organizeImport')
