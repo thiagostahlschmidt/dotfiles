@@ -1,47 +1,72 @@
 [alias]
-    br = branch
-    ci = commit
-    co = checkout
-    cp = cherry-pick
-    dc = diff --cached
-    fc = log --pretty=format:'%C(yellow)%h  %Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short --grep
-    fh = log --follow -p
-    ff = log --pretty=format:'%C(yellow)%h  %Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short
-    fg = log --pretty=format:'%C(yellow)%h  %Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short -S
-    lg = log --graph --all --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(bold white)— %an%C(reset)%C(bold yellow)%d%C(reset)' --abbrev-commit --date=relative
-    pl = pull --rebase --autostash
-    st = status
-    sh = show
+  br = branch
+  ci = commit
+  co = checkout
+  cp = cherry-pick
+  dc = diff --cached
+  # grep msg
+  gm = log --pretty=format:'%C(yellow)%h  %Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short --grep
+  # grep data
+  gd = log --pretty=format:'%C(yellow)%h  %Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short -S
+  # file commits
+  fc = log --pretty=format:'%C(yellow)%h  %Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short
+  # file history
+  fh = log --follow -p
+  lg = log --graph --all --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(bold white)— %an%C(reset)%C(bold yellow)%d%C(reset)' --abbrev-commit --date=relative
+  pl = pull --rebase --autostash
+  st = status
+  sh = show
+
 [color]
-    ui = auto
+  ui = auto
+
 [color "branch"]
-    current = yellow reverse
-    local = yellow
-    remote = green
+  current = yellow reverse
+  local = yellow
+  remote = green
+
 [color "status"]
-    added = yellow
-    changed = green
-    untracked = cyan
+  added = yellow
+  changed = green
+  untracked = cyan
+
 [color "diff"]
-    meta = yellow
-    frag = magenta bold
-    commit = yellow bold
-    old = red bold
-    new = green bold
-    whitespace = red reverse
+  meta = yellow
+  frag = magenta bold
+  commit = yellow bold
+  old = red bold
+  new = green bold
+  whitespace = red reverse
+
 [color "diff-highlight"]
-    oldNormal = red bold
-    oldHighlight = red bold 52
-    newNormal = green bold
-    newHighlight = green bold 22
-[difftool]
-    prompt = false
+  oldNormal = red bold
+  oldHighlight = red bold 52
+  newNormal = green bold
+  newHighlight = green bold 22
+
 [push]
-    default = current
+  default = current
+  followTags = true
+
+[http]
+  sslVerify = false
+  proxy = http://localhost:3128
+
 [user]
-    name = Thiago Stahlschmidt
-    email = thiago.cpgei@gmail.com
+  name = Thiago Stahlschmidt
+  email = thiago.stahlschmidt@bcb.gov.br
+
+[core]
+  editor = vim
+
+[credential]
+  helper = store
+
+[https]
+  proxy = http://localhost:3128
+
 [merge]
-    tool = fugitive
+  tool = fugitive
+
 [mergetool "fugitive"]
-    cmd = vim -f -c "Gvdiffsplit! $MERGED"
+  cmd = vim -f -c "Gvdiffsplit! $MERGED"

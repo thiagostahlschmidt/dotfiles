@@ -221,6 +221,8 @@ cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
 command! -nargs=0 Ff :call CocAction('format')
 command! -nargs=0 Oi :call CocAction('runCommand', 'editor.action.organizeImport')
 
+command! CleanRegs for i in range(34,122) | silent! call setreg(nr2char(i), []) | endfor
+
 fun! TouchBarMap()
    silent! !fish -ic __fish_apple_touchbar_vim_view
    if v:shell_error == 0
@@ -234,8 +236,12 @@ fun! TouchBarMap()
    endif
 endfun
 
-autocmd BufRead,BufNewFile *.tpl setlocal ts=2 sts=2 sw=2 expandtab
-autocmd BufWritePre * call Preserve(":%s/\\s\\+$//e")
-autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
-autocmd VimEnter * :call TouchBarMap()
-autocmd VimEnter * call s:coc_start()
+augroup TRIGGERS
+   autocmd!
+   autocmd BufRead,BufNewFile *.tpl setlocal ts=2 sts=2 sw=2 expandtab
+   autocmd BufWritePre * call Preserve(":%s/\\s\\+$//e")
+   autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+   autocmd VimEnter * CleanRegs
+   autocmd VimEnter * :call TouchBarMap()
+   autocmd VimEnter * call s:coc_start()
+augroup END
