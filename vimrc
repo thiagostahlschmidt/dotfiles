@@ -136,7 +136,9 @@ nnoremap <leader>- :vertical resize -5<cr>
 vnoremap J :m '>+1<cr>gv=gv
 vnoremap K :m '<-2<cr>gv=gv
 noremap x "_x
-vnoremap p "_dP
+xnoremap p "_dP
+nnoremap p p=`]
+nnoremap <c-p> p
 inoremap <c-c> <esc>
 
 if !exists('*Preserve')
@@ -194,6 +196,12 @@ function! s:coc_start() abort
       \    "command": "gopls",
       \    "rootPatterns": ["go.mod"],
       \    "filetypes": ["go"]
+      \  },
+      \  "bash": {
+      \    "command": "bash-language-server",
+      \    "args": ["start"],
+      \    "filetypes": ["sh"],
+      \    "ignoredRootPaths": ["~"]
       \  }
       \}
     let g:coc_user_config['yaml.schemas'] = { "kubernetes": "/*.yaml" }
