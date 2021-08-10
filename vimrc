@@ -135,11 +135,24 @@ nnoremap <leader>+ :vertical resize +5<cr>
 nnoremap <leader>- :vertical resize -5<cr>
 vnoremap J :m '>+1<cr>gv=gv
 vnoremap K :m '<-2<cr>gv=gv
+inoremap <c-j> <esc>:m .+1<cr>==gi
+inoremap <c-k> <esc>:m .-2<cr>==gi
+nnoremap <c-j> :m .+1<cr>==
+nnoremap <c-k> :m .-2<cr>==
+nnoremap Y yg_
 noremap x "_x
 xnoremap p "_dP
 nnoremap p p=`]
 nnoremap <c-p> p
 inoremap <c-c> <esc>
+nnoremap cn *``cgn
+nnoremap cN *``cgN
+nnoremap n nzzzv
+nnoremap N Nzzzv
+inoremap , ,<c-g>u
+inoremap . .<c-g>u
+nnoremap <expr> k (v:count > 1 ? "m'" . v:count : '') . 'k'
+nnoremap <expr> j (v:count > 1 ? "m'" . v:count : '') . 'j'
 
 if !exists('*Preserve')
     function! Preserve(command)
@@ -164,7 +177,6 @@ nmap <leader>gf :GFiles<cr>
 nmap <leader>g<left> :diffget //2<cr>
 nmap <leader>g<right> :diffget //3<cr>
 nmap <leader>gs :Gstatus<cr>
-
 
 let g:coc_start_at_startup = 0
 let g:coc_global_extensions = [
