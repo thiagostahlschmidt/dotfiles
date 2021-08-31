@@ -244,9 +244,9 @@ command! -nargs=0 Oi :call CocAction('runCommand', 'editor.action.organizeImport
 command! CleanRegs for i in range(34,122) | silent! call setreg(nr2char(i), []) | endfor
 
 fun! TouchBarMap()
-   silent! !fish -ic __fish_apple_touchbar_vim_view
+   silent! !zsh -ic touchbar_vim_view
    if v:shell_error == 0
-       autocmd VimLeave * silent! !fish -ic $caller_view
+       autocmd VimLeave * silent! !zsh -ic touchbar_main_view
        map <f1> :qa!<cr>
        map <f2> :Buffers<cr>
        map <f3> :Files<cr>
