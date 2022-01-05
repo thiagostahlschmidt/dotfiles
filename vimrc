@@ -12,7 +12,6 @@ set hidden
 set ignorecase
 set incsearch
 set listchars=tab:→\ ,trail:␣,precedes:«,extends:»,eol:␤
-set mouse=a
 set nobackup
 set nocompatible
 set nohlsearch
