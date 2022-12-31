@@ -1,8 +1,8 @@
 "require: curl, git and npm/node for coc
 set autoindent
-set belloff=all
 set background=dark
-set clipboard=unnamed
+set belloff=all
+set clipboard=unnamedplus
 set cmdheight=2
 set colorcolumn=120
 set complete+=kspell
@@ -29,13 +29,13 @@ set signcolumn=number
 set smartcase
 set smartindent
 set spell
-silent! set spelllang=en_us,pt_br
 set tabstop=4 softtabstop=4
 set updatetime=300
 set viminfo+='1000,n~/.vim/viminfo
 set wildignore+=**/.git/**
 set wildmenu
 set wildmode=list:full
+silent! set spelllang=en_us,pt_br
 
 syntax enable
 filetype plugin on
@@ -139,7 +139,8 @@ inoremap <c-k> <esc>:m .-2<cr>==gi
 nnoremap <c-j> :m .+1<cr>==
 nnoremap <c-k> :m .-2<cr>==
 nnoremap Y yg_
-noremap x "_x
+nnoremap x "_x
+vnoremap x "_x
 xnoremap p "_dP
 nnoremap p p=`]
 nnoremap <c-p> p
@@ -182,6 +183,7 @@ let g:coc_global_extensions = [
   \ 'coc-go',
   \ 'coc-java',
   \ 'coc-json',
+  \ 'coc-rust-analyzer',
   \ 'coc-sh',
   \ 'coc-yaml'
   \ ]
@@ -243,6 +245,9 @@ command! -nargs=0 Oi :call CocAction('runCommand', 'editor.action.organizeImport
 command! CleanRegs for i in range(34,122) | silent! call setreg(nr2char(i), []) | endfor
 
 fun! TouchBarMap()
+   if system('uname -s') != "Darwin\n"
+       return
+   endif
    silent! !zsh -ic touchbar_vim_view
    if v:shell_error == 0
        autocmd VimLeave * silent! !zsh -ic touchbar_main_view
