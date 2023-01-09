@@ -2,7 +2,7 @@
 set autoindent
 set background=dark
 set belloff=all
-set clipboard=unnamedplus
+set clipboard=unnamed
 set cmdheight=2
 set colorcolumn=120
 set complete+=kspell
