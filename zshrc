@@ -3,7 +3,17 @@ compinit
 path+=("${HOME}/bin")
 source <(kubectl completion zsh)
 alias k=kubectl
-alias bh='sqlite3 ~/Library/Safari/History.db "SELECT url FROM history_items ORDER BY visit_count" | fzf | xargs open'
+alias dok='minikube start; eval $(minikube -p minikube docker-env)'
+alias sh='sqlite3 ~/Library/Safari/History.db "SELECT url FROM history_items ORDER BY visit_count" | fzf | xargs open'
+ch() {
+  local cols sep
+  cols=$((COLUMNS/3))
+  sep='{::}'
+  cp -f ~/Library/Application\ Support/Google/Chrome/Default/History /tmp/h
+  sqlite3 -separator $sep /tmp/h "select substr(title, 1, $cols), url from urls order by last_visit_time desc" |
+  awk -F $sep '{printf "%-'$cols's  \x1b[36m%s\x1b[m\n", $1, $2}' |
+  fzf --ansi --multi | sed 's#.*\(https*://\)#\1#' | xargs open
+}
 export HISTSIZE=10000
 export SAVEHIST=10000
 setopt HIST_IGNORE_DUPS
@@ -17,6 +27,8 @@ export FZF_DEFAULT_OPTS='--height 50% --layout=reverse --border --color fg:14,fg
 export GOPATH=${HOME}/Projects/go
 export GOROOT="$(brew --prefix golang)/libexec"
 export PATH=${PATH}:${GOPATH}/bin:${GOROOT}/bin
+
+export MAVEN_OPTS='-Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -Dmaven.wagon.http.ssl.ignore.validity.dates=true'
 
 [ -f ~/.zsh/zsh-z/zsh-z.plugin.zsh ] && source ~/.zsh/zsh-z/zsh-z.plugin.zsh
 [ -f ~/.zsh/.fzf.zsh ] && source ~/.zsh/.fzf.zsh

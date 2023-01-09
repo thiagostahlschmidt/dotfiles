@@ -1,86 +1,84 @@
-add_newline = false
-scan_timeout = 10
-
-prompt_order = [
-    "username",
-    "hostname",
-    "kubernetes",
-    "directory",
-    "git_branch",
-    "git_commit",
-    "git_state",
-    "git_status",
-    "docker_context",
-    "kubernetes",
-    "package",
-    "java",
-    "nodejs",
-    "python",
-    "golang",
-    "nix_shell",
-    "env_var",
-    "cmd_duration",
-    "custom",
-    "jobs",
-    "time",
-    "character",
-]
-
-[git_status]
-conflicted = "🏳"
-ahead = "🏎💨"
-behind = "😰"
-diverged = "😵"
-untracked = "🤷"
-stashed = "📦"
-modified = "📝"
-staged.value = "++"
-staged.style = "green"
-staged_count.enabled = true
-staged_count.style = "green"
-renamed = "👅"
-deleted = "🗑"
-
-[git_branch]
-symbol = "🌱 "
-
-[directory]
-truncation_length = 8
-
-[hostname]
-ssh_only = true
-prefix = "⟪"
-suffix = "⟫"
-
-[kubernetes]
-symbol = "⛵ "
-style = "dimmed green"
-disabled = false
-
-[docker_context]
-symbol = "🐋 "
-disabled = false
-
-[line_break]
-disabled = true
+add_newline = true
 
 [character]
-symbol = "➜"
-error_symbol = "✗"
-use_symbol_for_status = true
+success_symbol = "[➜](bold green)"
+error_symbol = "[✖](bold red) "
+format = """
+[└─>](bold green) """
+
+[battery]
+full_symbol = '🔋 '
+charging_symbol = '⚡️ '
+discharging_symbol = '💀 '
+
+[kubernetes]
+format = '[\[⛵$context \($namespace\)\]](bold dimmed green) '
+disabled = false
+[kubernetes.context_aliases]
+".*ocp-h-bcnet.*" = "corp-homo"
+".*ocp-p-bcnet.*" = "corp-prod"
+"[12]q" = "dict-homo"
+"[12]s" = "dict-prod"
+"[12]t" = "dict-desen"
+
+[package]
+disabled = true
+
+[java]
+disabled = true
 
 [cmd_duration]
-min_time = 500
-prefix = "took "
+min_time = 10_000
+format = " took [$duration]($style)"
+
+[directory]
+truncation_length = 5
+format = "[$path]($style)[$lock_symbol]($lock_style) "
+
+[git_branch]
+format = " [$symbol$branch]($style) "
+symbol = "🍣 "
+style = "bold yellow"
+
+[git_commit]
+commit_hash_length = 8
+style = "bold white"
+
+[git_state]
+format = '[\($state( $progress_current of $progress_total)\)]($style) '
+
+[git_status]
+conflicted = "⚔️ "
+ahead = "🏎️ 💨 ×${count}"
+behind = "🐢 ×${count}"
+diverged = "🔱 🏎️ 💨 ×${ahead_count} 🐢 ×${behind_count}"
+untracked = "🛤️  ×${count}"
+stashed = "📦 "
+modified = "📝 ×${count}"
+staged = "🗃️  ×${count}"
+renamed = "📛 ×${count}"
+deleted = "🗑️  ×${count}"
+style = "bright-white"
+format = "$all_status$ahead_behind"
+
+[hostname]
+ssh_only = false
+format = "<[$hostname]($style)>"
+trim_at = "-"
+style = "bold dimmed white"
+disabled = true
+
+[memory_usage]
+format = "$symbol[${ram}( | ${swap})]($style) "
+threshold = 70
+style = "bold dimmed white"
+disabled = false
 
 [time]
-disabled = false
-format = "🕰  [%X]"
-utc_time_offset = "-3"
-time_range = "21:00:00-08:00:00"
+time_format = "%T"
+format = "🕙 $time($style) "
+style = "bright-white"
+disabled = true
 
-[custom.git]
-command = "true"
-files = ["README.md"]
-directories = [".git"]
-prefix = "custom-git "
+[username]
+style_user = "bold dimmed blue"

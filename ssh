@@ -1,16 +1,24 @@
 Host pi
-  HostName 192.168.0.253
+  RequestTTY Yes
   User pi
-  RequestTTY yes
-  RemoteCommand tmux new -A -s 0
-Host openwrt
-  HostName 192.168.0.254
+  HostName 192.168.0.253
+Host pixel
   User root
+  HostName 192.168.0.50
+Host router
+  HostName 192.168.0.1
+Host debian
+  HostName 192.168.255.129
+  User thiago
+Host bc
+  HostName 172.16.125.203
+  User thiago
 Host *
   User thiago
   StrictHostKeyChecking no
   UserKnownHostsFile=/dev/null
   LogLevel ERROR
   TcpKeepAlive yes
-  ServerAliveInterval 0
-  ServerAliveCountMax 3
+  ServerAliveCountMax 5
+  ServerAliveInterval 30
+  IPQoS=throughput

@@ -153,6 +153,7 @@ inoremap , ,<c-g>u
 inoremap . .<c-g>u
 nnoremap <expr> k (v:count > 1 ? "m'" . v:count : '') . 'k'
 nnoremap <expr> j (v:count > 1 ? "m'" . v:count : '') . 'j'
+cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
 
 if !exists('*Preserve')
     function! Preserve(command)
@@ -176,7 +177,7 @@ nmap <leader>gl :Gclog -- %<cr>
 nmap <leader>gf :GFiles<cr>
 nmap <leader>g<left> :diffget //2<cr>
 nmap <leader>g<right> :diffget //3<cr>
-nmap <leader>gs :Gstatus<cr>
+nmap <leader>gs :Git<cr>
 
 let g:coc_start_at_startup = 0
 let g:coc_global_extensions = [
@@ -196,12 +197,25 @@ function! s:show_documentation()
   endif
 endfunction
 
+inoremap <silent><expr> <TAB>
+      \ coc#pum#visible() ? coc#pum#next(1) :
+      \ CheckBackspace() ? "\<Tab>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+function! CheckBackspace() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
 function! s:coc_start() abort
     let g:coc_user_config = {}
     if empty(glob('~/.vim/lombok.jar'))
        silent !curl -sfLo ~/.vim/lombok.jar https://projectlombok.org/downloads/lombok.jar
     endif
-    let g:coc_user_config['java.jdt.ls.vmargs'] = "-javaagent:".$HOME."/.vim/lombok.jar -Xbootclasspath/a:".$HOME."/.vim/lombok.jar"
+    let g:coc_user_config['java.jdt.ls.vmargs'] = "-javaagent:".$HOME."/.vim/lombok.jar"
     let g:coc_user_config['coc.preferences.jumpCommand'] = 'drop'
     let g:coc_user_config['diagnostic.checkCurrentLine'] = "true"
     let g:coc_user_config['languageserver'] = {
@@ -237,10 +251,9 @@ inoremap <silent><expr> <c-space> coc#refresh()
 nnoremap <silent>K :call <sid>show_documentation()<cr>
 xmap <leader>f <Plug>(coc-format-selected)
 nmap <leader>f <Plug>(coc-format-selected)
-cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
 
-command! -nargs=0 Ff :call CocAction('format')
-command! -nargs=0 Oi :call CocAction('runCommand', 'editor.action.organizeImport')
+command! -nargs=0 FF :call CocAction('format')
+command! -nargs=0 OI :call CocAction('runCommand', 'editor.action.organizeImport')
 
 command! CleanRegs for i in range(34,122) | silent! call setreg(nr2char(i), []) | endfor
 
