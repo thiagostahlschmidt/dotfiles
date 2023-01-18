@@ -37,8 +37,8 @@ set wildmenu
 set wildmode=list:full
 silent! set spelllang=en_us,pt_br
 
-syntax enable
 filetype plugin on
+syntax enable
 
 if $TERM_PROGRAM =~ "iTerm"
     let &t_SI = "\<Esc>]50;CursorShape=1\x7" " vertical bar in insert mode
@@ -47,19 +47,19 @@ if $TERM_PROGRAM =~ "iTerm"
 endif
 
 if has('termguicolors')
-  set termguicolors
-  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+    set termguicolors
+    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 endif
 
 if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !echo 'first run - this may take some time, please wait...'
-  silent !mkdir -p ~/.vim/undodir
-  silent !curl  --create-dirs -sfLo ~/.vim/spell/pt.utf-8.spl
-    \ http://ftp.vim.org/pub/vim/runtime/spell/pt.utf-8.spl
-  silent !curl  --create-dirs -sfLo ~/.vim/autoload/plug.vim
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+    silent !echo 'first run - this may take some time, please wait...'
+    silent !mkdir -p ~/.vim/undodir
+    silent !curl  --create-dirs -sfLo ~/.vim/spell/pt.utf-8.spl
+      \ http://ftp.vim.org/pub/vim/runtime/spell/pt.utf-8.spl
+    silent !curl  --create-dirs -sfLo ~/.vim/autoload/plug.vim
+      \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
 call plug#begin('~/.vim/plugged')
@@ -155,18 +155,16 @@ nnoremap <expr> k (v:count > 1 ? "m'" . v:count : '') . 'k'
 nnoremap <expr> j (v:count > 1 ? "m'" . v:count : '') . 'j'
 cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
 
-if !exists('*Preserve')
-    function! Preserve(command)
-        try
-            let l:win_view = winsaveview()
-            let l:old_query = getreg('/')
-            silent! execute 'keeppatterns keepjumps ' . a:command
-         finally
-            call winrestview(l:win_view)
-            call setreg('/', l:old_query)
-         endtry
-    endfunction
-endif
+function! Preserve(command)
+    try
+        let l:win_view = winsaveview()
+        let l:old_query = getreg('/')
+        silent! execute 'keeppatterns keepjumps ' . a:command
+     finally
+        call winrestview(l:win_view)
+        call setreg('/', l:old_query)
+     endtry
+endfunction
 
 command! BufferOnly call Preserve("exec '%bd|e#|bd#'")
 cab bo BufferOnly
@@ -206,14 +204,14 @@ inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
                               \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
 function! CheckBackspace() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
 function! s:coc_start() abort
     let g:coc_user_config = {}
     if empty(glob('~/.vim/lombok.jar'))
-       silent !curl -sfLo ~/.vim/lombok.jar https://projectlombok.org/downloads/lombok.jar
+        silent !curl -sfLo ~/.vim/lombok.jar https://projectlombok.org/downloads/lombok.jar
     endif
     let g:coc_user_config['java.jdt.ls.vmargs'] = "-javaagent:".$HOME."/.vim/lombok.jar"
     let g:coc_user_config['coc.preferences.jumpCommand'] = 'drop'
@@ -257,7 +255,7 @@ command! -nargs=0 OI :call CocAction('runCommand', 'editor.action.organizeImport
 
 command! CleanRegs for i in range(34,122) | silent! call setreg(nr2char(i), []) | endfor
 
-fun! TouchBarMap()
+function! TouchBarMap()
    if system('uname -s') != "Darwin\n"
        return
    endif
@@ -281,4 +279,22 @@ augroup TRIGGERS
    autocmd VimEnter * CleanRegs
    autocmd VimEnter * :call TouchBarMap()
    autocmd VimEnter * call s:coc_start()
+augroup END
+
+function! CheckPassword()
+    if empty($password)
+        let $password = input(expand("%") . " password: ")
+        while len($password) == 0
+            let $password = input("Invalid. Enter password: ")
+        endwhile
+    endif
+endfunction
+
+augroup ENC
+    autocmd!
+    autocmd BufReadPost,BufWritePre,FileReadPost,FileWritePost *.enc call CheckPassword()
+    autocmd BufReadPost,FileReadPost *.enc '[,']!openssl enc -aes256 -base64 -pbkdf2 -pass pass:${password} -d 2>/dev/null
+    autocmd BufReadPost,FileReadPost *.enc execute ":doautocmd BufReadPost " . expand("%:r") | redraw!
+    autocmd BufWritePre,FileWritePre *.enc '[,']!openssl enc -aes256 -base64 -pbkdf2 -pass pass:${password} 2>/dev/null
+    autocmd BufWritePost,FileWritePost *.enc undo
 augroup END
